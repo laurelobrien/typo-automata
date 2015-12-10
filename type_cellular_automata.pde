@@ -20,7 +20,7 @@ Left click to generate new offpsring, right click to exit.
 boolean wantColour = true; //toggle for black vs pastels
 boolean wantPDF = false; //true = export pdf every click
 boolean wantMirror = false; //true = mirror horizontally before writing PDF
-int fontSize = 26; //change number of letters in each row/column
+int fontSize = 24; //change number of letters in each row/column
                    //via the font size that fits inside
 
 
@@ -51,7 +51,7 @@ PFont mono; //generation marker font
 
 //initial settings and values
 void setup() {
-  size(1000, 800); //canvas size, 8.5"x11" format
+  size(900, 600); //canvas size
   background(255); //white
   instantiateWoodBlocks(); //initialize allBlocks[] with new WoodBlocks
   
