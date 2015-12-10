@@ -9,10 +9,13 @@ The original goal of *Typo Automata* was to create a template for a printmaker t
 ##using the program
 Left click creates new generations, and changing the global variable wantPDF to equal *true* will export a PDF to the program folder for every new generation. Right click exits the program, which is important if you're generating PDFs to save them correctly. If you want the PDF to be mirrored horizontally (useful as a letterpress type-setting template), change wantMirror to true also.
 
+##examples
 ![one generation](http://ft3.fckitupload.com/k/black_static.png)
+
 *a single generation*
 
 ![animation of several generations](http://ft3.fckitupload.com/kb/coloured_animation.gif)
+
 *an animation of several generations, colour-coded to help identify how formal attributes change: green are letters with ascenders, purple are letters with descenders, and pink are letters with neither.*
 
 Note: there is currently a logical error where letter objects that have been separated from allBlocks[] by being duplicated (to preserve the attributes of the parent if the child becomes capitalized, etc) will be the wrong colour when colour is enabled.
