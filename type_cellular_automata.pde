@@ -18,8 +18,8 @@ Left click to generate new offpsring, right click to exit.
    patterns when de-bugging and writing rules
 ----------------------------------------------------------*/
 boolean wantColour = true; //toggle for black vs pastels
-boolean wantPDF = false; //toggle boolean output: 
-                         //true = export pdf every click
+boolean wantPDF = false; //true = export pdf every click
+boolean wantMirror = false; //true = mirror horizontally before writing PDF
 int fontSize = 26; //change number of letters in each row/column
                    //via the font size that fits inside
 
@@ -99,45 +99,70 @@ void mouseClicked() {
   //on left click
   if (mouseButton == LEFT) {
     
-    //if user wants PDF written
-    if (wantPDF) beginRecord(PDF, "gen"+generation+".pdf"); //begin recording PDF;
-    background(255); //white, erase last frame
-    reliefGrid.generate(); //create new generation 
-    
-    //draw small generation marker above reliefGrid
-    //and outside transforms so it's still useful when
-    //template is reversed horizontally
-    fill(#FFB090); //peachy red
-    textAlign(LEFT); //left-align text
-    textFont(mono); //use PFont apercu mono
-    textSize(fontSize / 1.4); //smaller than reliefGrid's type
-    text("generation " + generation, spacing*1.3, spacing/1.1); //draw
-    
-    //render reliefGrid on the canvas and perform transformations
-    //to mirror it horizontally
-    pushMatrix(); //isolate memory for transformations
-      translate(((spacing * (width/spacing))/2), ((spacing * (height/spacing))/2)); //translate back to final position
-      scale(-1, 1); //negative scaling on horizontal axis: mirroring
-      translate(-((spacing * (width/spacing))/2),-((spacing * (height/spacing))/2)); //translate center of reliefGrid's to canvas origin (0, 0)
-      reliefGrid.render(); //render new generation on canvas
-    popMatrix(); //done isolating memory
-    
-    if (wantPDF) {
-      endRecord(); //finish recording pdf
-      println("Recorded PDF into sketch folder."); //confirm endRecord() was reached
+    //Mirrored PDF
+    if (wantPDF && wantMirror) {
+      beginRecord(PDF, "gen"+generation+".pdf"); //begin recording PDF;
+      background(255); //white, erase last frame
+      reliefGrid.generate(); //create new generation 
+      
+      //draw small generation marker above reliefGrid
+      //and outside transforms so it's still useful when
+      //template is reversed horizontally
+      fill(#FFB090); //peachy red
+      textAlign(LEFT); //left-align text
+      textFont(mono); //use PFont apercu mono
+      textSize(fontSize / 1.4); //smaller than reliefGrid's type
+      text("generation " + generation, spacing*1.3, spacing/1.1); //draw
+      
+      //render reliefGrid on the canvas and perform transformations
+      //to mirror it horizontally
+      pushMatrix(); //isolate memory for transformations
+        translate(((spacing * (width/spacing))/2), ((spacing * (height/spacing))/2)); //translate back to final position
+        scale(-1, 1); //negative scaling on horizontal axis: mirroring
+        translate(-((spacing * (width/spacing))/2),-((spacing * (height/spacing))/2)); //translate center of reliefGrid's to canvas origin (0, 0)
+        reliefGrid.render(); //render new generation on canvas
+      popMatrix(); //done isolating memory
+      
+      endRecord(); //finished writing PDF
     }
-  
-    //re-render same generation on canvas, without mirror transform
-    //to preview the actual orientation for the user
-    background(255); //erase mirrored version
-    reliefGrid.render(); //un-mirrored version
     
-    //generation marker again; previous one was erased
-    fill(0);
-    textAlign(LEFT);
-    textFont(mono);
-    textSize(fontSize / 1.4);
-    text("generation " + generation, spacing*1.3, spacing/1.1);
+    //Un-mirrored PDF
+    else if (wantPDF && !wantMirror) {
+      beginRecord(PDF, "gen"+generation+".pdf"); //begin writing PDF
+      
+      //re-render same generation on canvas, without mirror transform
+      //to preview the actual orientation for the user
+      background(255); //erase mirrored version
+      reliefGrid.generate(); //new generation
+      reliefGrid.render(); //draw on canvas
+      
+      //generation marker again; previous one was erased
+      fill(0);
+      textAlign(LEFT);
+      textFont(mono);
+      textSize(fontSize / 1.4);
+      text("generation " + generation, spacing*1.3, spacing/1.1);
+      
+      endRecord(); //finished writing pdf
+      println("Recorded PDF into program folder."); //confirm endRecord() was reached
+    }
+    
+    //no PDF
+    else {
+      //re-render same generation on canvas, without mirror transform
+      //to preview the actual orientation for the user
+      background(255); //erase mirrored version
+      reliefGrid.generate(); //new generation
+      reliefGrid.render(); //draw on canvas
+      
+      //generation marker again; previous one was erased
+      fill(0);
+      textAlign(LEFT);
+      textFont(mono);
+      textSize(fontSize / 1.4);
+      text("generation " + generation, spacing*1.3, spacing/1.1);
+    }
+    
     
     generation ++; //increment generation count
   } 
